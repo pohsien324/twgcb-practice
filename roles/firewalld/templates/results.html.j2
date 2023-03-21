@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TWGCB Results</title>
+	<style>
+		table, th, td {
+			border: 1px solid black;
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+  <table>
+	<caption>TWGCB Testing Result</caption>
+	<thead>
+        <tr>
+            <th>Host</th>
+            <th>Rule ID</th>
+            <th>Rule Name</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+	{% for result_item in all_test_results %}
+		{% if result_item['result'] != "Passed" %}
+		<tr style="background-color: #f28484;">
+		{% else %}
+    	<tr style="background-color: #8dd18d;">
+		{% endif %}
+    		<td>{{ result_item['host'] }}</td>
+            <td>{{ result_item['rule_id'] }}</td>
+            <td style="text-align: left">{{ result_item['rule_name'] }}</td>
+            <td>{{ result_item['result'] }}</td>
+    	</tr>
+	{% endfor %}
+    </tbody>
+  </table>
+  <p>{{ current_datetime.stdout }}</p>
+</body>
+</html>

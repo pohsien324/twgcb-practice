@@ -1,0 +1,9 @@
+---
+
+- name: Fix TWGCB
+  hosts: rhel8
+  gather_facts: false
+  roles:
+  - role: firewalld
+    vars:
+       op_mode: fix

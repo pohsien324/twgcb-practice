@@ -1,0 +1,33 @@
+---
+
+- name: Create results directories
+  file:
+    path: "{{ results_path }}"
+    state: directory
+  delegate_to: localhost
+  when: op_mode == 'detect'
+
+- name: Detect the env with all TWGCB rules
+  vars:
+    rule_list: "{{ twgcb_include_rules }}"
+  include_tasks: detect-rules.yml
+  when: op_mode == 'detect'
+
+- name: Get current datetime
+  shell: date +'%Y/%m/%d %H:%M:%S'
+  register: current_datetime
+  delegate_to: localhost
+  
+- name: Generate results.html
+  template:
+    src: results.html.j2
+    dest: "{{ results_path }}/results.html"
+  run_once: true
+  delegate_to: localhost
+  when: op_mode == 'detect'
+
+- name: Fix the env with specific rules
+  vars:
+    rule_list: "{{ twgcb_include_rules }}"
+  include_tasks: fix-env.yml
+  when: op_mode == 'fix'
