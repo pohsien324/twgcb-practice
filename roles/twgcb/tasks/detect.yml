@@ -1,0 +1,31 @@
+---
+
+- name: Detection block
+  block:
+  - name: Create results directories
+    file:
+      path: "{{ results_path }}"
+      state: directory
+    delegate_to: localhost
+
+  - name: Detect the env with TWGCB rules
+    import_tasks: detection-rules.yml
+
+  - name: Get current datetime
+    command: date +'%Y/%m/%d %H:%M:%S'
+    register: current_datetime
+    delegate_to: localhost
+
+  - name: Combine all results into list
+    set_fact:
+      all_test_results: "{{ all_test_results | default([]) + hostvars[item]['twgcb_results'] }}"
+    with_items: "{{ groups[group_names[0]] }}"
+    when: hostvars[item]['twgcb_results'] is defined
+
+  - name: Generate results.html
+    template:
+      src: results.html.j2
+      dest: "{{ results_path }}/results.html"
+      # dest: "{{ results_path }}/results-{{ current_datetime.stdout | regex_replace('\\s.*','') | replace('/','') }}.html"
+    run_once: true
+    delegate_to: localhost

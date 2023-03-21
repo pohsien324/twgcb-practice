@@ -18,6 +18,7 @@
         <tr>
             <th>Host</th>
             <th>Rule ID</th>
+            <th>Rule Classification</th>
             <th>Rule Name</th>
             <th>Result</th>
         </tr>
@@ -31,6 +32,7 @@
 		{% endif %}
     		<td>{{ result_item['host'] }}</td>
             <td>{{ result_item['rule_id'] }}</td>
+            <td>{{ result_item['rule_classification'] }}</td>
             <td style="text-align: left">{{ result_item['rule_name'] }}</td>
             <td>{{ result_item['result'] }}</td>
     	</tr>

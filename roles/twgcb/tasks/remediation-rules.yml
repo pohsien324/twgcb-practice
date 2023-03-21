@@ -1,0 +1,22 @@
+---
+
+# TWG-CB-01-008-0245 Firewalld Configuration
+- name: (TWG-CB-01-008-0245) block
+  when: "'TWG-CB-01-008-0245' in twgcb_include_rules"
+  block:
+  - name: (TWG-CB-01-008-0245) Enable the firewalld
+    systemd:
+      name: firewalld
+      state: started
+      enabled: true
+
+# TWG-CB-01-008-0277 Disable SSH Root Login
+- name: (TWG-CB-01-008-0277) block
+  when: "'TWG-CB-01-008-0277' in twgcb_include_rules"
+  block:
+  - name: (TWG-CB-01-008-0277) Modify sshd configuration to disallow root user login
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitRootLogin'
+      line: PermitRootLogin no
+    notify: Restart sshd

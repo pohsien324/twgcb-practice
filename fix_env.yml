@@ -4,6 +4,6 @@
   hosts: rhel8
   gather_facts: false
   roles:
-  - role: firewalld
+  - role: twgcb
     vars:
-       op_mode: fix
+      op_mode: fix

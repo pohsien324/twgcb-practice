@@ -1,0 +1,6 @@
+---
+
+- name: Remediation block
+  block:
+  - name: Fix the env with specific rules
+    import_tasks: remediation-rules.yml

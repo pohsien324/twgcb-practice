@@ -1,0 +1,9 @@
+---
+
+- name: Detect the environment
+  import_tasks: detect.yml
+  when: op_mode == 'detect' and (twgcb_include_rules| length) > 0
+
+- name: Remedy the environment
+  import_tasks: fix.yml
+  when: op_mode == 'fix' and (twgcb_include_rules| length) > 0

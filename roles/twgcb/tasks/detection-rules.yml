@@ -1,0 +1,78 @@
+---
+
+# TWG-CB-01-008-0245 Firewalld Configuration
+- name: (TWG-CB-01-008-0245) block
+  when: "'TWG-CB-01-008-0245' in twgcb_include_rules"
+  block:
+  - name: (TWG-CB-01-008-0245) Setup the rule description
+    set_fact:
+      rule_name: "firewalld服務"
+      rule_classification: "Firewalld 配置"
+
+  - name: (TWG-CB-01-008-0245) Get firewalld configuration
+    shell:
+      systemctl list-unit-files --state=enabled | grep firewalld
+    register: firewalld_status
+    ignore_errors: true
+
+  - name: (TWG-CB-01-008-0245) Save results
+    set_fact:
+      twgcb_results: |
+        {{
+          (twgcb_results | default([])) +
+          [
+            {
+              'host': inventory_hostname,
+              'rule_id': 'TWG-CB-01-008-0245',
+              'rule_classification': rule_classification,
+              'rule_name': rule_name,
+              'result': 'Failed' if firewalld_status.stdout == "" else 'Passed'
+            }
+          ]
+        }}
+    delegate_to: localhost
+
+# TWG-CB-01-008-0277 Disable SSH Root Login
+- name: (TWG-CB-01-008-0277) block
+  when: "'TWG-CB-01-008-0277' in twgcb_include_rules"
+  block:
+  - name: (TWG-CB-01-008-0277) Setup the rule description
+    set_fact:
+      rule_name: "SSH PermitRoot Login 參數"
+      rule_classification: "SSH 配置"
+
+  - name: (TWG-CB-01-008-0277) Retrieve sshd configuration
+    command:
+      grep '^PermitRootLogin' /etc/ssh/sshd_config
+    register: sshd_config
+    ignore_errors: true
+
+  - name: (TWG-CB-01-008-0277) Setup result
+    set_fact:
+      sshd_config_results: |
+       {% if sshd_config.stdout != "" %}
+         {% if (sshd_config.stdout.split('PermitRootLogin')[1] | trim) != 'no' %}
+         Failed
+         {% else %}
+         Passed
+         {% endif %}
+       {% else %}
+       Passed
+       {% endif %}
+
+  - name: (TWG-CB-01-008-0277) Save results
+    set_fact:
+      twgcb_results: |
+       {{
+         (twgcb_results | default([])) +
+         [
+           {
+             'host': inventory_hostname,
+             'rule_id': 'TWG-CB-01-008-0277',
+             'rule_classification': rule_classification,
+             'rule_name': rule_name,
+             'result': (sshd_config_results | trim)
+           }
+         ]
+       }}
+    delegate_to: localhost

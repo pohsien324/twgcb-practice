@@ -2,10 +2,8 @@
 
 results_path: /tmp/twgcb
 
-rule_list: []
-
 # op_mode: fix
-op_mode: ""
+op_mode: detect
 
 twgcb_include_rules:
 - TWG-CB-01-008-0245

@@ -1,0 +1,11 @@
+name: "Lint Test" 
+on: [push, pull_request]
+
+jobs:
+  ansible-lint:
+    name: Ansible Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint Ansible Playbook
+        uses: ansible/ansible-lint-action@main
